@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="NIGHT SHIFT: TIRE INSPECTION — A fictional industrial horror inspection game."
+    >
+    <meta name="theme-color" content="#090909">
+
+    <title>NIGHT SHIFT: TIRE INSPECTION</title>
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Decorative effects -->
+    <div class="screen-noise" aria-hidden="true"></div>
+    <div class="screen-vignette" aria-hidden="true"></div>
+
+    <div class="game-shell">
+
+        <!-- =========================================
+             HEADER
+             ========================================= -->
+        <header class="site-header">
+            <div class="brand">
+                <div class="brand-symbol" aria-hidden="true">N</div>
+
+                <div class="brand-text">
+                    <p class="brand-company">BLACKRIDGE TIRE WORKS</p>
+                    <p class="brand-subtitle">NIGHT OPERATIONS DIVISION</p>
+                </div>
+            </div>
+
+            <div class="header-status">
+                <span class="status-indicator" aria-hidden="true"></span>
+                <span id="systemStatus">SYSTEM STANDBY</span>
+
+                <button
+                    id="soundToggle"
+                    class="icon-button"
+                    type="button"
+                    aria-label="Toggle sound"
+                    title="Toggle sound"
+                >
+                    <span id="soundIcon" aria-hidden="true">♫</span>
+                    <span id="soundLabel">SOUND ON</span>
+                </button>
+            </div>
+        </header>
+
+
+        <!-- =========================================
+             START SCREEN
+             ========================================= -->
+        <section
+            id="startScreen"
+            class="screen start-screen"
+            aria-labelledby="gameTitle"
+        >
+            <div class="start-content">
+
+                <div class="file-label">
+                    <span class="file-label-dot"></span>
+                    EMPLOYEE TRAINING RECORD // FICTIONAL
+                </div>
+
+                <p class="eyebrow">THE FACTORY NEVER REALLY SLEEPS</p>
+
+                <h1 id="gameTitle">
+                    NIGHT SHIFT
+                    <span>TIRE INSPECTION</span>
+                </h1>
+
+                <p class="start-description">
+                    Another shift. Another inspection.
+                    Check the tire, verify the records, and decide
+                    whether the product is safe to pass.
+                </p>
+
+                <p class="start-warning">
+                    Some records may not belong to this shift.
+                    Pay attention to details. Trust the evidence.
+                </p>
+
+                <div class="start-metadata">
+                    <div class="metadata-item">
+                        <span class="metadata-label">LOCATION</span>
+                        <span class="metadata-value">BLACKRIDGE PLANT</span>
+                    </div>
+
+                    <div class="metadata-item">
+                        <span class="metadata-label">ASSIGNED SHIFT</span>
+                        <span class="metadata-value">22:00 — 06:00</span>
+                    </div>
+
+                    <div class="metadata-item">
+                        <span class="metadata-label">POSITION</span>
+                        <span class="metadata-value">NIGHT INSPECTOR</span>
+                    </div>
+                </div>
+
+                <button id="startButton" class="primary-button" type="button">
+                    <span>BEGIN NIGHT SHIFT</span>
+                    <span aria-hidden="true">→</span>
+                </button>
+
+                <p class="start-footnote">
+                    FICTIONAL HORROR GAME · ALL RECORDS AND PROCEDURES ARE INVENTED
+                </p>
+            </div>
+
+            <div class="start-decoration" aria-hidden="true">
+                <div class="decoration-ring ring-one"></div>
+                <div class="decoration-ring ring-two"></div>
+                <div class="decoration-ring ring-three"></div>
+                <div class="decoration-crosshair"></div>
+                <span class="decoration-code">NT-00X</span>
+                <span class="decoration-caption">VISUAL SCAN // OFFLINE</span>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             MAIN GAME SCREEN
+             ========================================= -->
+        <section
+            id="gameScreen"
+            class="screen game-screen"
+            aria-label="Tire inspection workstation"
+            hidden
+        >
+
+            <!-- Shift status bar -->
+            <div class="shift-bar">
+                <div class="shift-bar-title">
+                    <span class="live-indicator"></span>
+                    <span>NIGHT SHIFT IN PROGRESS</span>
+                </div>
+
+                <div class="shift-bar-info">
+                    <div class="shift-stat">
+                        <span class="stat-label">SHIFT TIME</span>
+                        <strong id="shiftClock">22:00</strong>
+                    </div>
+
+                    <div class="shift-stat">
+                        <span class="stat-label">ROUND</span>
+                        <strong id="roundCounter">01 / 20</strong>
+                    </div>
+
+                    <div class="shift-stat">
+                        <span class="stat-label">SCORE</span>
+                        <strong id="scoreCounter">000</strong>
+                    </div>
+
+                    <div class="shift-stat">
+                        <span class="stat-label">ERRORS</span>
+                        <strong id="errorCounter">00</strong>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Round progress -->
+            <div
+                class="progress-track"
+                role="progressbar"
+                aria-label="Shift progress"
+                aria-valuemin="0"
+                aria-valuemax="20"
+                aria-valuenow="0"
+                id="roundProgress"
+            >
+                <div id="roundProgressFill" class="progress-fill"></div>
+            </div>
+
+
+            <!-- Main workspace -->
+            <div class="workspace">
+
+                <!-- LEFT COLUMN: TIRE INSPECTION -->
+                <section class="workspace-main">
+
+                    <div class="section-heading">
+                        <div>
+                            <p class="section-overline">WORKSTATION 01</p>
+                            <h2>Visual Inspection</h2>
+                        </div>
+
+                        <span id="caseStatus" class="status-tag">
+                            AWAITING INSPECTION
+                        </span>
+                    </div>
+
+
+                    <!-- Current production case -->
+                    <article class="case-card">
+                        <div class="case-card-header">
+                            <div>
+                                <span class="small-label">CURRENT CASE</span>
+                                <h3 id="caseTitle">Tire Inspection Record</h3>
+                            </div>
+
+                            <span id="caseNumber" class="case-number">
+                                CASE 001
+                            </span>
+                        </div>
+
+                        <div class="case-data-grid">
+                            <div class="case-data">
+                                <span class="small-label">PROCESS</span>
+                                <strong id="processName">BANBURY</strong>
+                            </div>
+
+                            <div class="case-data">
+                                <span class="small-label">BATCH ID</span>
+                                <strong id="batchNumber">BW-0001</strong>
+                            </div>
+
+                            <div class="case-data">
+                                <span class="small-label">TIRE SERIAL</span>
+                                <strong id="tireSerial">BT-000001</strong>
+                            </div>
+                        </div>
+                    </article>
+
+
+                    <!-- Tire visual -->
+                    <article class="inspection-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="small-label">PHYSICAL EXAMINATION</span>
+                                <h3>Product Overview</h3>
+                            </div>
+
+                            <span class="panel-code">CAM-01</span>
+                        </div>
+
+                        <p class="panel-instruction">
+                            Examine the tire carefully. Select an inspection
+                            area to review any available visual evidence.
+                        </p>
+
+                        <div class="tire-stage">
+                            <!--
+                                tires.js will render the fictional tire here.
+                                Inspection areas will be interactive.
+                            -->
+                            <div
+                                id="tireVisual"
+                                class="tire-visual"
+                                aria-label="Tire illustration"
+                            >
+                                <div class="tire-placeholder">
+                                    <div class="placeholder-wheel">
+                                        <div class="placeholder-inner-wheel">
+                                            <span>BT</span>
+                                        </div>
+                                    </div>
+                                    <p>AWAITING VISUAL SCAN</p>
+                                </div>
+                            </div>
+
+                            <div class="tire-stage-footer">
+                                <span>VISUAL SCAN</span>
+                                <span id="scanStatus">NOT STARTED</span>
+                            </div>
+                        </div>
+
+                        <!-- Tire inspection areas -->
+                        <div class="inspection-areas">
+                            <p class="small-label">INSPECTION AREAS</p>
+
+                            <div class="area-button-list">
+                                <button
+                                    class="area-button"
+                                    id="inspectTreadButton"
+                                    type="button"
+                                    data-area="tread"
+                                >
+                                    <span class="area-number">01</span>
+                                    <span>
+                                        <strong>Tread</strong>
+                                        <small>Surface and pattern</small>
+                                    </span>
+                                    <span class="area-arrow" aria-hidden="true">↗</span>
+                                </button>
+
+                                <button
+                                    class="area-button"
+                                    id="inspectSidewallButton"
+                                    type="button"
+                                    data-area="sidewall"
+                                >
+                                    <span class="area-number">02</span>
+                                    <span>
+                                        <strong>Sidewall</strong>
+                                        <small>Markings and condition</small>
+                                    </span>
+                                    <span class="area-arrow" aria-hidden="true">↗</span>
+                                </button>
+
+                                <button
+                                    class="area-button"
+                                    id="inspectBeadButton"
+                                    type="button"
+                                    data-area="bead"
+                                >
+                                    <span class="area-number">03</span>
+                                    <span>
+                                        <strong>Bead Area</strong>
+                                        <small>Visible edge condition</small>
+                                    </span>
+                                    <span class="area-arrow" aria-hidden="true">↗</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Inspection result and clues -->
+                        <div
+                            id="inspectionFindings"
+                            class="inspection-findings"
+                            aria-live="polite"
+                        >
+                            <div class="findings-heading">
+                                <span class="findings-icon" aria-hidden="true">!</span>
+                                <strong>INSPECTION NOTES</strong>
+                            </div>
+
+                            <p id="inspectionHint">
+                                No areas inspected yet. Examine the product
+                                and cross-check the records before deciding.
+                            </p>
+
+                            <ul id="clueList" class="clue-list">
+                                <!-- inspection.js inserts discovered clues -->
+                            </ul>
+                        </div>
+                    </article>
+
+
+                    <!-- Inspection decision -->
+                    <article class="decision-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="small-label">FINAL ACTION</span>
+                                <h3>Inspection Decision</h3>
+                            </div>
+
+                            <span class="decision-reminder">
+                                CHECK THE EVIDENCE FIRST
+                            </span>
+                        </div>
+
+                        <p class="decision-description">
+                            Review the tire and its records. Select the
+                            appropriate decision for this fictional case.
+                        </p>
+
+                        <div class="decision-buttons">
+                            <button
+                                id="decisionOK"
+                                class="decision-button decision-ok"
+                                type="button"
+                            >
+                                <span class="decision-stamp">OK</span>
+                                <span class="decision-button-text">
+                                    <strong>PASS PRODUCT</strong>
+                                    <small>Evidence supports approval</small>
+                                </span>
+                            </button>
+
+                            <button
+                                id="decisionNG"
+                                class="decision-button decision-ng"
+                                type="button"
+                            >
+                                <span class="decision-stamp">NG</span>
+                                <span class="decision-button-text">
+                                    <strong>REJECT PRODUCT</strong>
+                                    <small>Defect or inconsistency found</small>
+                                </span>
+                            </button>
+                        </div>
+
+                        <div
+                            id="decisionFeedback"
+                            class="decision-feedback"
+                            aria-live="polite"
+                            hidden
+                        >
+                            <strong id="feedbackTitle">DECISION RESULT</strong>
+                            <p id="feedbackMessage"></p>
+                            <button
+                                id="nextRoundButton"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                CONTINUE →
+                            </button>
+                        </div>
+                    </article>
+
+                </section>
+
+
+                <!-- RIGHT COLUMN: RECORDS AND REPORT -->
+                <aside class="workspace-sidebar">
+
+                    <!-- Production record -->
+                    <article class="document-card production-document">
+                        <div class="document-topline">
+                            <span class="document-type">DOCUMENT A</span>
+                            <span class="document-status">PRODUCTION</span>
+                        </div>
+
+                        <div class="document-title">
+                            <h3>Production Record</h3>
+                            <p>BLACKRIDGE TIRE WORKS</p>
+                        </div>
+
+                        <div class="document-stamp" aria-hidden="true">
+                            INTERNAL
+                        </div>
+
+                        <div class="document-fields">
+                            <div class="document-field">
+                                <span>Operator Name</span>
+                                <strong id="operatorName">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Employee ID</span>
+                                <strong id="operatorId">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Assigned Shift</span>
+                                <strong id="operatorShift">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Process</span>
+                                <strong id="recordProcess">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Start Time</span>
+                                <strong id="productionStartTime">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Finish Time</span>
+                                <strong id="productionEndTime">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Material Batch</span>
+                                <strong id="materialBatch">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Previous Process</span>
+                                <strong id="previousProcess">—</strong>
+                            </div>
+                        </div>
+
+                        <div class="document-note">
+                            <span class="note-symbol" aria-hidden="true">✎</span>
+                            <div>
+                                <strong>PRODUCTION NOTES</strong>
+                                <p id="productionNotes">
+                                    No additional notes recorded.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="document-footer">
+                            <span>RECORD REF: <strong id="productionRecordId">—</strong></span>
+                            <span>FORM PR-01</span>
+                        </div>
+                    </article>
+
+
+                    <!-- Inspection report -->
+                    <article class="document-card report-document">
+                        <div class="document-topline">
+                            <span class="document-type">DOCUMENT B</span>
+                            <span class="document-status">INSPECTION</span>
+                        </div>
+
+                        <div class="document-title">
+                            <h3>Inspection Report</h3>
+                            <p>NIGHT QUALITY CONTROL</p>
+                        </div>
+
+                        <div class="report-summary">
+                            <div>
+                                <span class="small-label">REPORT NUMBER</span>
+                                <strong id="reportNumber">IR-0001</strong>
+                            </div>
+
+                            <div
+                                id="reportStamp"
+                                class="report-stamp"
+                                aria-label="Inspection decision not recorded"
+                            >
+                                <span id="reportStatus">PENDING</span>
+                            </div>
+                        </div>
+
+                        <div class="document-fields">
+                            <div class="document-field">
+                                <span>Product Serial</span>
+                                <strong id="reportTireSerial">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Inspector</span>
+                                <strong id="reportInspector">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Inspection Time</span>
+                                <strong id="reportTime">—</strong>
+                            </div>
+
+                            <div class="document-field">
+                                <span>Recorded Batch</span>
+                                <strong id="reportBatch">—</strong>
+                            </div>
+                        </div>
+
+                        <div class="report-observations">
+                            <span class="small-label">OBSERVATIONS</span>
+                            <p id="reportObservations">
+                                Awaiting inspector evaluation.
+                            </p>
+                        </div>
+
+                        <div class="report-signature">
+                            <div>
+                                <span>Inspector Signature</span>
+                                <strong id="reportSignature">________________</strong>
+                            </div>
+
+                            <div>
+                                <span>Form Reference</span>
+                                <strong>IR-QC-02</strong>
+                            </div>
+                        </div>
+
+                        <div class="document-footer">
+                            <span>VERIFY BEFORE STAMPING</span>
+                            <span id="reportFooterStatus">NOT VERIFIED</span>
+                        </div>
+                    </article>
+
+
+                    <!-- Event log -->
+                    <article class="event-log-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="small-label">SYSTEM LOG</span>
+                                <h3>Shift Activity</h3>
+                            </div>
+
+                            <span class="log-live">REC</span>
+                        </div>
+
+                        <div
+                            id="eventLog"
+                            class="event-log"
+                            role="log"
+                            aria-live="polite"
+                            aria-relevant="additions"
+                        >
+                            <p class="log-entry">
+                                <span class="log-time">22:00</span>
+                                <span class="log-message">
+                                    Inspection workstation initialized.
+                                </span>
+                            </p>
+                        </div>
+                    </article>
+
+
+                    <!-- Anomaly Index toggle -->
+                    <button
+                        id="anomalyIndexToggle"
+                        class="index-toggle-button"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="anomalyIndexPanel"
+                    >
+                        <span class="index-icon" aria-hidden="true">▤</span>
+
+                        <span>
+                            <strong>ANOMALY INDEX</strong>
+                            <small>Eight process reference files</small>
+                        </span>
+
+                        <span id="indexToggleIcon" aria-hidden="true">+</span>
+                    </button>
+
+                    <!-- Anomaly Index panel -->
+                    <section
+                        id="anomalyIndexPanel"
+                        class="anomaly-index-panel"
+                        aria-label="Anomaly reference index"
+                        hidden
+                    >
+                        <div class="index-heading">
+                            <span class="small-label">REFERENCE ARCHIVE</span>
+                            <h3>Anomaly Index</h3>
+                            <p>
+                                Review known patterns and compare them
+                                with the evidence in the current case.
+                            </p>
+                        </div>
+
+                        <div id="anomalyIndexList" class="anomaly-index-list">
+                            <!-- anomaly-index.js inserts the eight categories -->
+                        </div>
+
+                        <p class="index-disclaimer">
+                            All records and anomaly descriptions are
+                            fictional game content.
+                        </p>
+                    </section>
+
+                </aside>
+
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             ENDING SCREEN
+             ========================================= -->
+        <section
+            id="endingScreen"
+            class="screen ending-screen"
+            aria-labelledby="endingTitle"
+            hidden
+        >
+            <div class="ending-content">
+                <span class="ending-overline">SHIFT REPORT // FINAL ENTRY</span>
+
+                <div id="endingSymbol" class="ending-symbol" aria-hidden="true">
+                    ■
+                </div>
+
+                <h2 id="endingTitle">SHIFT COMPLETE</h2>
+
+                <p id="endingDescription">
+                    The shift has ended. The final record has been generated.
+                </p>
+
+                <div class="ending-stats">
+                    <div class="ending-stat">
+                        <span>FINAL SCORE</span>
+                        <strong id="finalScore">000</strong>
+                    </div>
+
+                    <div class="ending-stat">
+                        <span>CASES REVIEWED</span>
+                        <strong id="finalCases">00</strong>
+                    </div>
+
+                    <div class="ending-stat">
+                        <span>DECISION ERRORS</span>
+                        <strong id="finalErrors">00</strong>
+                    </div>
+                </div>
+
+                <div class="final-record">
+                    <span class="small-label">FINAL SHIFT RECORD</span>
+                    <p id="finalRecordText">
+                        No final record available.
+                    </p>
+                </div>
+
+                <button id="restartButton" class="primary-button" type="button">
+                    <span>START ANOTHER SHIFT</span>
+                    <span aria-hidden="true">↻</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             STORY EVENT OVERLAY
+             ========================================= -->
+        <div
+            id="storyOverlay"
+            class="story-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="storyTitle"
+            hidden
+        >
+            <div class="story-dialog">
+                <div class="story-dialog-header">
+                    <span class="story-alert-marker">!</span>
+                    <span id="storyCategory">UNEXPECTED EVENT</span>
+                </div>
+
+                <h2 id="storyTitle">SYSTEM MESSAGE</h2>
+
+                <p id="storyMessage">
+                    An unexpected event has occurred.
+                </p>
+
+                <div class="story-dialog-footer">
+                    <span id="storyTimestamp">TIME: UNKNOWN</span>
+
+                    <button
+                        id="storyContinueButton"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        ACKNOWLEDGE →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- =========================================
+             FOOTER
+             ========================================= -->
+        <footer class="site-footer">
+            <div class="footer-left">
+                <span>BLACKRIDGE TIRE WORKS</span>
+                <span class="footer-separator">/</span>
+                <span>SIMULATION BUILD 1.0</span>
+            </div>
+
+            <div class="footer-right">
+                FICTIONAL HORROR EXPERIENCE
+            </div>
+        </footer>
+
+    </div>
+
+
+    <!-- =============================================
+         JAVASCRIPT MODULES
+
+         Classic scripts are loaded in dependency order.
+         The main.js file connects their functions to the UI.
+         ============================================= -->
+
+    <script src="js/tires.js" defer></script>
+    <script src="js/production.js" defer></script>
+    <script src="js/anomalies.js" defer></script>
+    <script src="js/inspection.js" defer></script>
+    <script src="js/anomaly-index.js" defer></script>
+    <script src="js/audio.js" defer></script>
+    <script src="js/story.js" defer></script>
+    <script src="js/game.js" defer></script>
+    <script src="js/main.js" defer></script>
+
+</body>
+</html>
